@@ -8,4 +8,14 @@
     <string name="sign_out">Sign out</string>
 
 
+    <!-- Dialog/Fragment names -->
+    <string name="dialog_new_note">New Note Dialog</string>
+
+    <!-- Strings -->
+    <string name="note_title">Title</string>
+    <string name="note_content">Content</string>
+
+
+
+
 </resources>
