@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">FirestoreGettingStarted</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
+
+
+</resources>
