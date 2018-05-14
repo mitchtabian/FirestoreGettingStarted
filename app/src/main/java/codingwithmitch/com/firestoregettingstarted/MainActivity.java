@@ -58,31 +58,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void createNewNote(String title, String content) {
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        DocumentReference newNoteRef = db
-                .collection("notes")
-                .document();
-
-        Note note = new Note();
-        note.setTitle(title);
-        note.setContent(content);
-        note.setNote_id(newNoteRef.getId());
-        note.setUser_id(userId);
-
-        newNoteRef.set(note).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    newNoteSuccess();
-                }
-                else{
-                    newNoteFailed();
-                }
-            }
-        });
+        
     }
 
     private void newNoteFailed(){
