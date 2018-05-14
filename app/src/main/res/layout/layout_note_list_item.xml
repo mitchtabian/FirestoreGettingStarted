@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent=".75"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/timestamp"
+        android:textSize="18sp"
+        android:textColor="@color/Black"
+        android:text="This is the First Note"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:id="@+id/title"/>
+
+    <TextView
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent=".25"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@+id/title"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="15sp"
+        android:textColor="@color/DarkGrey"
+        android:text="May 3, 2910"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:id="@+id/timestamp"
+        />
+
+</android.support.constraint.ConstraintLayout>
