@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FirestoreGettingStarted.iml" filepath="$PROJECT_DIR$/FirestoreGettingStarted.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/FirestoreGettingStarted.iml" filepath="$PROJECT_DIR$/.idea/FirestoreGettingStarted.iml" />
+      <module fileurl="file://F:\AndroidStudio Projects\FirestoreGettingStarted\FirestoreGettingStarted.iml" filepath="F:\AndroidStudio Projects\FirestoreGettingStarted\FirestoreGettingStarted.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://F:\AndroidStudio Projects\FirestoreGettingStarted\app\app.iml" filepath="F:\AndroidStudio Projects\FirestoreGettingStarted\app\app.iml" />
     </modules>
   </component>
 </project>
