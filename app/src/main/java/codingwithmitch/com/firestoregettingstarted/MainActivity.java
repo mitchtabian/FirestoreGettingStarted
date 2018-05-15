@@ -6,7 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,8 +20,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import codingwithmitch.com.firestoregettingstarted.models.Note;
 
@@ -28,7 +39,8 @@ import codingwithmitch.com.firestoregettingstarted.models.Note;
 
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener,
-        IMainActivity
+        IMainActivity,
+        SwipeRefreshLayout.OnRefreshListener
 {
 
     private static final String TAG = "MainActivity";
@@ -39,9 +51,14 @@ public class MainActivity extends AppCompatActivity implements
 
     //widgets
     private FloatingActionButton mFab;
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     //vars
-    View mParentLayout;
+    private View mParentLayout;
+    private ArrayList<Note> mNotes = new ArrayList<>();
+    private NoteRecyclerViewAdapter mNoteRecyclerViewAdapter;
+    private DocumentSnapshot mLastQueriedDocument;
 
 
     @Override
@@ -50,9 +67,108 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         mFab = findViewById(R.id.fab);
         mParentLayout = findViewById(android.R.id.content);
+        mRecyclerView = findViewById(R.id.recycler_view);
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+
+        mFab.setOnClickListener(this);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         setupFirebaseAuth();
-        mFab.setOnClickListener(this);
+        initRecyclerView();
+        getNotes();
+    }
+
+
+
+    @Override
+    public void onRefresh() {
+        getNotes();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void getNotes(){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        CollectionReference notesCollectionRef = db
+                .collection("notes");
+
+        Query notesQuery = null;
+        if(mLastQueriedDocument != null){
+           notesQuery = notesCollectionRef
+                    .whereEqualTo("user_id", FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .orderBy("timestamp", Query.Direction.ASCENDING)
+                    .startAfter(mLastQueriedDocument);
+        }
+        else{
+            notesQuery = notesCollectionRef
+                    .whereEqualTo("user_id", FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .orderBy("timestamp", Query.Direction.ASCENDING);
+        }
+
+        notesQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+
+                    for(QueryDocumentSnapshot document: task.getResult()){
+                        Note note = document.toObject(Note.class);
+                        mNotes.add(note);
+//                        Log.d(TAG, "onComplete: got a new note. Position: " + (mNotes.size() - 1));
+                    }
+
+                    if(task.getResult().size() != 0){
+                        mLastQueriedDocument = task.getResult().getDocuments()
+                                .get(task.getResult().size() -1);
+                    }
+
+                    mNoteRecyclerViewAdapter.notifyDataSetChanged();
+                }
+                else{
+                    makeSnackBarMessage("Query Failed. Check Logs.");
+                }
+            }
+        });
+    }
+
+    private void initRecyclerView(){
+        if(mNoteRecyclerViewAdapter == null){
+            mNoteRecyclerViewAdapter = new NoteRecyclerViewAdapter(this, mNotes);
+        }
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mNoteRecyclerViewAdapter);
+    }
+
+    @Override
+    public void updateNote(final Note note){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference noteRef = db
+                .collection("notes")
+                .document(note.getNote_id());
+
+        noteRef.update(
+                "title", note.getTitle(),
+                "content", note.getContent()
+        ).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    makeSnackBarMessage("Updated note");
+                    mNoteRecyclerViewAdapter.updateNote(note);
+                }
+                else{
+                    makeSnackBarMessage("Failed. Check log.");
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onNoteSelected(Note note) {
+        ViewNoteDialog dialog = ViewNoteDialog.newInstance(note);
+        dialog.show(getSupportFragmentManager(), getString(R.string.dialog_view_note));
     }
 
     @Override
@@ -76,25 +192,20 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    newNoteSuccess();
+                    makeSnackBarMessage("Created new note");
+                    getNotes();
                 }
                 else{
-                    newNoteFailed();
+                    makeSnackBarMessage("Failed. Check log.");
                 }
             }
         });
     }
 
-    private void newNoteFailed(){
-        Log.d(TAG, "newNoteSuccess: failed to create new note.");
-
-        Snackbar.make(mParentLayout, "Failed. Check log.", Snackbar.LENGTH_SHORT).show();
+    private void makeSnackBarMessage(String message){
+        Snackbar.make(mParentLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 
-    private void newNoteSuccess(){
-        Log.d(TAG, "newNoteSuccess: inserted new note.");
-        Snackbar.make(mParentLayout, "Created new note", Snackbar.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onClick(View view) {
@@ -119,7 +230,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()){
             case R.id.optionSignOut:
                 signOut();
