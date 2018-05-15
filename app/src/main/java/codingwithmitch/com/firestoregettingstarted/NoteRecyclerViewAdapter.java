@@ -62,24 +62,13 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
 
-    public void updateNote(Note note){
-       mNotes.get(mSelectedNoteIndex).setTitle(note.getTitle());
-       mNotes.get(mSelectedNoteIndex).setContent(note.getContent());
-       notifyDataSetChanged();
-    }
-
-    public void removeNote(Note note){
-        mNotes.remove(note);
-        notifyDataSetChanged();
-    }
-
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         mIMainActivity = (IMainActivity) mContext;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView title, timestamp;
 
@@ -88,14 +77,9 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             title = itemView.findViewById(R.id.title);
             timestamp = itemView.findViewById(R.id.timestamp);
 
-            itemView.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View view) {
-            mSelectedNoteIndex = getAdapterPosition();
-            mIMainActivity.onNoteSelected(mNotes.get(mSelectedNoteIndex));
-        }
+
     }
 }
 

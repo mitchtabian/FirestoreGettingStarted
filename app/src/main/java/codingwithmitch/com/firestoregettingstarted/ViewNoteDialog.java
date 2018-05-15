@@ -83,11 +83,7 @@ public class ViewNoteDialog extends DialogFragment implements View.OnClickListen
 
                 if(!title.equals("")){
 
-                    mNote.setTitle(title);
-                    mNote.setContent(content);
-
-                    mIMainActivity.updateNote(mNote);
-                    getDialog().dismiss();
+                    // ... update the note
                 }
                 else{
                     Toast.makeText(getActivity(), "Enter a title", Toast.LENGTH_SHORT).show();

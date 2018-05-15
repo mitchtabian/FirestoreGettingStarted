@@ -139,37 +139,6 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(mNoteRecyclerViewAdapter);
     }
 
-    @Override
-    public void updateNote(final Note note){
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        DocumentReference noteRef = db
-                .collection("notes")
-                .document(note.getNote_id());
-
-        noteRef.update(
-                "title", note.getTitle(),
-                "content", note.getContent()
-        ).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    makeSnackBarMessage("Updated note");
-                    mNoteRecyclerViewAdapter.updateNote(note);
-                }
-                else{
-                    makeSnackBarMessage("Failed. Check log.");
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onNoteSelected(Note note) {
-        ViewNoteDialog dialog = ViewNoteDialog.newInstance(note);
-        dialog.show(getSupportFragmentManager(), getString(R.string.dialog_view_note));
-    }
 
     @Override
     public void createNewNote(String title, String content) {
