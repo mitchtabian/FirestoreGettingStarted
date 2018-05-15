@@ -68,10 +68,6 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
        notifyDataSetChanged();
     }
 
-    public void removeNote(Note note){
-        mNotes.remove(note);
-        notifyDataSetChanged();
-    }
 
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {

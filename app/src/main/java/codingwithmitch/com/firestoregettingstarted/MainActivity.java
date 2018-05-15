@@ -78,27 +78,7 @@ public class MainActivity extends AppCompatActivity implements
         getNotes();
     }
 
-    @Override
-    public void deleteNote(final Note note){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        DocumentReference noteRef = db
-                .collection("notes")
-                .document(note.getNote_id());
-
-        noteRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    makeSnackBarMessage("Deleted note");
-                    mNoteRecyclerViewAdapter.removeNote(note);
-                }
-                else{
-                    makeSnackBarMessage("Failed. Check log.");
-                }
-            }
-        });
-    }
 
     @Override
     public void onRefresh() {

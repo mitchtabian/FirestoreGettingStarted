@@ -14,5 +14,4 @@ public interface IMainActivity {
 
     void onNoteSelected(Note note);
 
-    void deleteNote(Note note);
 }
