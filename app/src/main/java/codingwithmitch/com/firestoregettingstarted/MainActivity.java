@@ -55,16 +55,16 @@ public class MainActivity extends AppCompatActivity implements
         mFab.setOnClickListener(this);
     }
 
-    @Override
+	@Override
     public void createNewNote(String title, String content) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         DocumentReference newNoteRef = db
                 .collection("notes")
                 .document();
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         Note note = new Note();
         note.setTitle(title);
@@ -76,24 +76,17 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    newNoteSuccess();
+                    makeSnackBarMessage("Created new note");
                 }
                 else{
-                    newNoteFailed();
+                    makeSnackBarMessage("Failed. Check log.");
                 }
             }
         });
     }
 
-    private void newNoteFailed(){
-        Log.d(TAG, "newNoteSuccess: failed to create new note.");
-
-        Snackbar.make(mParentLayout, "Failed. Check log.", Snackbar.LENGTH_SHORT).show();
-    }
-
-    private void newNoteSuccess(){
-        Log.d(TAG, "newNoteSuccess: inserted new note.");
-        Snackbar.make(mParentLayout, "Created new note", Snackbar.LENGTH_SHORT).show();
+    private void makeSnackBarMessage(String message){
+        Snackbar.make(mParentLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -119,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
+        
         switch (item.getItemId()){
             case R.id.optionSignOut:
                 signOut();
