@@ -27,8 +27,7 @@ import codingwithmitch.com.firestoregettingstarted.models.Note;
  */
 
 public class MainActivity extends AppCompatActivity implements
-        View.OnClickListener,
-        IMainActivity
+        View.OnClickListener
 {
 
     private static final String TAG = "MainActivity";
@@ -55,11 +54,7 @@ public class MainActivity extends AppCompatActivity implements
         mFab.setOnClickListener(this);
     }
 
-    @Override
-    public void createNewNote(String title, String content) {
 
-        
-    }
 
     private void newNoteFailed(){
         Log.d(TAG, "newNoteSuccess: failed to create new note.");

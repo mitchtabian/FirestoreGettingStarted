@@ -25,7 +25,7 @@ public class NewNoteDialog extends DialogFragment implements View.OnClickListene
     private TextView mCreate, mCancel;
 
     //vars
-    private IMainActivity mIMainActivity;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class NewNoteDialog extends DialogFragment implements View.OnClickListene
                 String content = mContent.getText().toString();
 
                 if(!title.equals("")){
-                    mIMainActivity.createNewNote(title, content);
+
                     getDialog().dismiss();
                 }
                 else{
@@ -81,11 +81,6 @@ public class NewNoteDialog extends DialogFragment implements View.OnClickListene
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mIMainActivity = (IMainActivity)getActivity();
-    }
 }
 
 
