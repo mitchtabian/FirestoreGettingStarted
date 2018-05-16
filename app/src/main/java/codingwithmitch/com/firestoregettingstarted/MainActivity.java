@@ -55,17 +55,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
-    private void newNoteFailed(){
-        Log.d(TAG, "newNoteSuccess: failed to create new note.");
-
-        Snackbar.make(mParentLayout, "Failed. Check log.", Snackbar.LENGTH_SHORT).show();
+    private void makeSnackBarMessage(String message){
+        Snackbar.make(mParentLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 
-    private void newNoteSuccess(){
-        Log.d(TAG, "newNoteSuccess: inserted new note.");
-        Snackbar.make(mParentLayout, "Created new note", Snackbar.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onClick(View view) {
@@ -90,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
+        
         switch (item.getItemId()){
             case R.id.optionSignOut:
                 signOut();
