@@ -88,47 +88,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private void getNotes(){
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        CollectionReference notesCollectionRef = db
-                .collection("notes");
-
-        Query notesQuery = null;
-        if(mLastQueriedDocument != null){
-           notesQuery = notesCollectionRef
-                    .whereEqualTo("user_id", FirebaseAuth.getInstance().getCurrentUser().getUid())
-                    .orderBy("timestamp", Query.Direction.ASCENDING)
-                    .startAfter(mLastQueriedDocument);
-        }
-        else{
-            notesQuery = notesCollectionRef
-                    .whereEqualTo("user_id", FirebaseAuth.getInstance().getCurrentUser().getUid())
-                    .orderBy("timestamp", Query.Direction.ASCENDING);
-        }
-
-        notesQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-
-                    for(QueryDocumentSnapshot document: task.getResult()){
-                        Note note = document.toObject(Note.class);
-                        mNotes.add(note);
-//                        Log.d(TAG, "onComplete: got a new note. Position: " + (mNotes.size() - 1));
-                    }
-
-                    if(task.getResult().size() != 0){
-                        mLastQueriedDocument = task.getResult().getDocuments()
-                                .get(task.getResult().size() -1);
-                    }
-
-                    mNoteRecyclerViewAdapter.notifyDataSetChanged();
-                }
-                else{
-                    makeSnackBarMessage("Query Failed. Check Logs.");
-                }
-            }
-        });
     }
 
     private void initRecyclerView(){
