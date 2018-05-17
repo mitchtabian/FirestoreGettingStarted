@@ -23,7 +23,7 @@ public class ViewNoteDialog extends DialogFragment implements View.OnClickListen
 
     //widgets
     private EditText mTitle, mContent;
-    private TextView mSave;
+    private TextView mSave, mDelete;
 
     //vars
     private IMainActivity mIMainActivity;
@@ -57,8 +57,10 @@ public class ViewNoteDialog extends DialogFragment implements View.OnClickListen
         mTitle = view.findViewById(R.id.note_title);
         mContent = view.findViewById(R.id.note_content);
         mSave = view.findViewById(R.id.save);
+        mDelete = view.findViewById(R.id.delete);
 
         mSave.setOnClickListener(this);
+        mDelete.setOnClickListener(this);
 
         getDialog().setTitle("Edit Note");
 
@@ -95,6 +97,11 @@ public class ViewNoteDialog extends DialogFragment implements View.OnClickListen
                 break;
             }
 
+            case R.id.delete:{
+
+
+                break;
+            }
         }
     }
 
